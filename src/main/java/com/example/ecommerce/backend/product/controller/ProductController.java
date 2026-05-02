@@ -4,6 +4,7 @@ import com.example.ecommerce.backend.common.constants.ApiEndpoints;
 import com.example.ecommerce.backend.common.dto.response.ApiResponse;
 import com.example.ecommerce.backend.common.dto.response.PaginatedResponse;
 import com.example.ecommerce.backend.product.dto.request.ProductCreateRequest;
+import com.example.ecommerce.backend.product.dto.request.ProductSearchRequest;
 import com.example.ecommerce.backend.product.dto.request.ProductUpdateRequest;
 import com.example.ecommerce.backend.product.dto.response.ProductResponse;
 import com.example.ecommerce.backend.product.service.ProductService;
@@ -170,6 +171,48 @@ public class ProductController {
     }
 
     /**
+     * Searches active products using optional filters.
+     *
+     * @param request product search filters and pagination information
+     * @return response containing matching active products
+     */
+    @Operation(
+            summary = "Search active products",
+            description = "Assignment scaffold: students must search products by optional name, SKU, category, and price range filters and return only active products.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    required = true,
+                    description = "Product search payload containing optional filters and pagination values.",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ProductSearchRequest.class),
+                            examples = @ExampleObject(
+                                    name = "Search products",
+                                    value = """
+                                            {
+                                              "name": "Smartphone",
+                                              "sku": "PHONE",
+                                              "categoryId": 1,
+                                              "minPrice": 100.00,
+                                              "maxPrice": 700.00,
+                                              "page": 0,
+                                              "size": 10
+                                            }
+                                            """
+                            )
+                    )
+            )
+    )
+    @PostMapping("/search")
+    public ResponseEntity<ApiResponse<PaginatedResponse<ProductResponse>>> searchProducts(
+            @Valid @RequestBody ProductSearchRequest request) {
+        // TODO: Implement product search in the service layer.
+        // Search must use the optional name, sku, categoryId, minPrice, and maxPrice filters.
+        // Only products where isActive = true should be included in the result.
+        // Use request.page() and request.size() to build the Pageable object.
+        throw new UnsupportedOperationException("Product search assignment is not implemented yet.");
+    }
+
+    /**
      * Updates existing product details.
      *
      * @param id product identifier
@@ -231,15 +274,15 @@ public class ProductController {
     }
 
     /**
-     * Permanently deletes a product.
+     * Soft deletes a product.
      *
      * @param id product identifier
      * @return empty response when deletion succeeds
      * @throws jakarta.persistence.EntityNotFoundException when no product exists for the identifier
      */
     @Operation(
-            summary = "Delete product permanently",
-            description = "Deletes a product catalog item permanently from the system.",
+            summary = "Soft delete product",
+            description = "Assignment scaffold: students must change this endpoint from hard delete to soft delete by setting isActive to false.",
             responses = {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(
                             responseCode = "204",
@@ -256,7 +299,9 @@ public class ProductController {
     public ResponseEntity<Void> deleteProduct(
             @Parameter(description = "Unique identifier of the product to delete.", example = "1", required = true)
             @PathVariable Long id) {
-        productService.delete(id);
-        return ResponseEntity.noContent().build();
+        // TODO: Replace the current hard delete behavior with soft delete.
+        // Soft delete means the product row must remain in the database.
+        // Instead of calling deleteById, load the product, set isActive = false, and save it.
+        throw new UnsupportedOperationException("Product soft delete assignment is not implemented yet.");
     }
 }

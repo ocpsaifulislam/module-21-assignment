@@ -4,6 +4,7 @@ import com.example.ecommerce.backend.common.constants.ApiEndpoints;
 import com.example.ecommerce.backend.common.dto.response.ApiResponse;
 import com.example.ecommerce.backend.common.dto.response.PaginatedResponse;
 import com.example.ecommerce.backend.product.dto.request.CategoryCreateRequest;
+import com.example.ecommerce.backend.product.dto.request.CategorySearchRequest;
 import com.example.ecommerce.backend.product.dto.request.CategoryUpdateRequest;
 import com.example.ecommerce.backend.product.entity.Category;
 import com.example.ecommerce.backend.product.service.CategoryService;
@@ -161,6 +162,47 @@ public class CategoryController {
     }
 
     /**
+     * Searches active categories using optional filters.
+     *
+     * @param request category search filters and pagination information
+     * @return response containing matching active categories
+     */
+    @Operation(
+            summary = "Search active categories",
+            description = "Assignment scaffold: students must search categories by optional name and code filters and return only active categories.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    required = true,
+                    description = "Category search payload containing optional filters and pagination values.",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = CategorySearchRequest.class),
+                            examples = @ExampleObject(
+                                    name = "Search categories",
+                                    value = """
+                                            {
+                                              "name": "Electronics",
+                                              "code": "ELEC",
+                                              "page": 0,
+                                              "size": 10
+                                            }
+                                            """
+                            )
+                    )
+            )
+    )
+    @PostMapping("/search")
+    public ResponseEntity<ApiResponse<PaginatedResponse<Category>>> searchCategories(
+            @Valid @RequestBody CategorySearchRequest request) {
+        // TODO: Implement category search in the service layer.
+        // Search must use the optional name and code filters from the request.
+        // Only categories where isActive = true should be included in the result.
+        // Use request.page() and request.size() to build the Pageable object.
+
+        // Remove this line with your service method call
+        throw new UnsupportedOperationException("Category search assignment is not implemented yet.");
+    }
+
+    /**
      * Updates existing category details.
      *
      * @param id      category identifier
@@ -254,15 +296,15 @@ public class CategoryController {
     }
 
     /**
-     * Permanently deletes a category.
+     * Soft deletes a category.
      *
      * @param id category identifier
      * @return empty response when deletion succeeds
      * @throws jakarta.persistence.EntityNotFoundException when no category exists for the identifier
      */
     @Operation(
-            summary = "Delete category permanently",
-            description = "Deletes a product category permanently from the system.",
+            summary = "Soft delete category",
+            description = "Assignment scaffold: students must change this endpoint from hard delete to soft delete by setting isActive to false.",
             responses = {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(
                             responseCode = "204",
@@ -279,7 +321,11 @@ public class CategoryController {
     public ResponseEntity<Void> deleteCategory(
             @Parameter(description = "Unique identifier of the category to delete.", example = "1", required = true)
             @PathVariable Long id) {
-        categoryService.delete(id);
-        return ResponseEntity.noContent().build();
+        // TODO: Replace the current hard delete behavior with soft delete.
+        // Soft delete means the category row must remain in the database.
+        // Instead of calling deleteById, load the category, set isActive = false, and save it.
+
+        // Remove this line with your service method call
+        throw new UnsupportedOperationException("Category soft delete assignment is not implemented yet.");
     }
 }
