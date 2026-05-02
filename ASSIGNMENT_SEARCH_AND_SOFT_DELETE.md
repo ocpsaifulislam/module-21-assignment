@@ -89,6 +89,32 @@ DELETE /api/v1/products/{id}
 
 _Note: Category and product search controller methods are already created. You need to replace the todos with your implementation._
 
+## Project Setup Guide
+
+### Step 1: Clone the Repository
+
+Clone the starter project from GitHub:
+
+```powershell
+git clone https://github.com/PialKanti/ecommerce-backend
+```
+
+### Step 2: Navigate to Project Directory
+
+Move into the cloned project folder:
+
+```powershell
+cd ecommerce-backend
+```
+
+### Step 3: Checkout Assignment Branch
+
+Switch to the dedicated assignment branch:
+
+```powershell
+git checkout module-21-assignment
+```
+
 ## Run the Project
 
 ### Prerequisites
@@ -114,17 +140,6 @@ Verify that the database container is running:
 ```powershell
 docker compose ps
 ```
-
-The project uses this database configuration:
-
-| Property | Value |
-| --- | --- |
-| Container | `ecommerce_postgres` |
-| Host | `localhost` |
-| Port | `5432` |
-| Database | `ecommerce_db` |
-| Username | `admin` |
-| Password | `admin@123` |
 
 ### Run from IntelliJ IDEA
 
