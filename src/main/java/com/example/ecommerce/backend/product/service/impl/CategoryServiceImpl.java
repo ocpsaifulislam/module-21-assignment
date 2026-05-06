@@ -2,6 +2,7 @@ package com.example.ecommerce.backend.product.service.impl;
 
 import com.example.ecommerce.backend.common.exception.ResourceConflictException;
 import com.example.ecommerce.backend.product.dto.request.CategoryCreateRequest;
+import com.example.ecommerce.backend.product.dto.request.CategorySearchRequest;
 import com.example.ecommerce.backend.product.dto.request.CategoryUpdateRequest;
 import com.example.ecommerce.backend.product.entity.Category;
 import com.example.ecommerce.backend.product.mapper.CategoryMapper;
@@ -11,6 +12,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 /**
@@ -69,5 +71,15 @@ public class CategoryServiceImpl implements CategoryService {
             throw new EntityNotFoundException("Category not found: " + id);
         }
         categoryRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<Category> searchCategories(CategorySearchRequest request) {
+        Pageable pageable = PageRequest.of(request.page(), request.size());
+        return categoryRepository.searchCategories(
+                request.name(),
+                request.code(),
+                pageable
+        );
     }
 }

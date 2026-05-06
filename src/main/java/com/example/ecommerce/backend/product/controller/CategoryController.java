@@ -199,7 +199,11 @@ public class CategoryController {
         // Use request.page() and request.size() to build the Pageable object.
 
         // Remove this line with your service method call
-        throw new UnsupportedOperationException("Category search assignment is not implemented yet.");
+       //  throw new UnsupportedOperationException("Category search assignment is not implemented yet.");
+
+        return ResponseEntity.ok(ApiResponse.success(
+                PaginatedResponse.of(categoryService.searchCategories(request))
+        ));
     }
 
     /**
