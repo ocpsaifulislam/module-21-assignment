@@ -17,7 +17,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -205,7 +204,7 @@ public class ProductController {
             )
     )
     @PostMapping("/search")
-    public ResponseEntity<ApiResponse<PaginatedResponse<ProductResponse>>> searchProducts(
+    public ResponseEntity<ApiResponse<PaginatedResponse<Product>>> searchProducts(
             @Valid @RequestBody ProductSearchRequest request) {
         // TODO: Implement product search in the service layer.
         // Search must use the optional name, sku, categoryId, minPrice, and maxPrice filters.
