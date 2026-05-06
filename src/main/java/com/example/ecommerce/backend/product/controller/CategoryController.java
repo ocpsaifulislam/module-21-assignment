@@ -331,9 +331,9 @@ public class CategoryController {
 
         // Remove this line with your service method call
         // throw new UnsupportedOperationException("Category soft delete assignment is not implemented yet.");
-         categoryService.delete(id); // soft delete
+        categoryService.delete(id); // soft delete
 
-        return ResponseEntity.ok(ApiResponse.success("Category id ("+id+") deleted successfully"));
+        return ResponseEntity.ok(ApiResponse.success("Category id (" + id + ") deleted successfully"));
 
     }
 }
