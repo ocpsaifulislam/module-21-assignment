@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 /**
@@ -72,6 +73,16 @@ public class CategoryServiceImpl implements CategoryService {
 
         category.setIsActive(false);
         categoryRepository.save(category);
+    }
+
+    @Override
+    public Page<Category> searchCategories(CategorySearchRequest request) {
+        Pageable pageable = PageRequest.of(request.page(), request.size());
+        return categoryRepository.searchCategories(
+                request.name(),
+                request.code(),
+                pageable
+        );
     }
 
     @Override
