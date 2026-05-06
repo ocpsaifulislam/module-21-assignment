@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: ecommerce_postgres
+    image: postgres:17.5
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin@123
+      POSTGRES_DB: ecommerce_db
+    volumes:
+      - postgres_data:/var/lib/ecommerce/postgres/data
+    networks:
+      - backend_net
+
+  oracle:
+    container_name: oracle_19c
+    image: container-registry.oracle.com/database/enterprise:19.3.0
+    ports:
+      - "1521:1521"
+      - "5500:5500"
+    environment:
+      ORACLE_SID: ORCLCDB
+      ORACLE_PDB: ORCLPDB1
+      ORACLE_ADMIN_USER: admin
+      ORACLE_CHARACTERSET: AL32UTF8
+      ORACLE_PWD: OraclePass@123
+    volumes:
+      - oracle_data:/opt/oracle/oradata
+    networks:
+      - backend_net
+    shm_size: 1gb
+    healthcheck:
+      test: ["CMD", "sqlplus", "-v"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+networks:
+  backend_net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  oracle_data:
