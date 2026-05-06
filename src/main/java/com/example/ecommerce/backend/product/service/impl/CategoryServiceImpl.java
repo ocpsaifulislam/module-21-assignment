@@ -68,9 +68,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void delete(Long id) {
+//        if (!categoryRepository.existsById(id)) {
+//            throw new EntityNotFoundException("Category not found: " + id);
+//        }
+//        categoryRepository.deleteById(id);
+
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found: " + id));
-
         category.setIsActive(false);
         categoryRepository.save(category);
     }
@@ -84,4 +88,6 @@ public class CategoryServiceImpl implements CategoryService {
                 pageable
         );
     }
+
+
 }

@@ -79,5 +79,6 @@ public interface CategoryService {
      * @return a page of matching active categories
      */
     Page<Category> searchCategories(CategorySearchRequest request);
+
 }
 
