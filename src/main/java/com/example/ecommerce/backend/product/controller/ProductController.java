@@ -7,6 +7,7 @@ import com.example.ecommerce.backend.product.dto.request.ProductCreateRequest;
 import com.example.ecommerce.backend.product.dto.request.ProductSearchRequest;
 import com.example.ecommerce.backend.product.dto.request.ProductUpdateRequest;
 import com.example.ecommerce.backend.product.dto.response.ProductResponse;
+import com.example.ecommerce.backend.product.entity.Product;
 import com.example.ecommerce.backend.product.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -209,7 +211,11 @@ public class ProductController {
         // Search must use the optional name, sku, categoryId, minPrice, and maxPrice filters.
         // Only products where isActive = true should be included in the result.
         // Use request.page() and request.size() to build the Pageable object.
-        throw new UnsupportedOperationException("Product search assignment is not implemented yet.");
+        // throw new UnsupportedOperationException("Product search assignment is not implemented yet.");
+        return ResponseEntity.ok(ApiResponse.success(
+                PaginatedResponse.of(productService.searchProducts(request))
+        ));
+
     }
 
     /**

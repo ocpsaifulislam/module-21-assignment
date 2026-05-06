@@ -1,7 +1,10 @@
 package com.example.ecommerce.backend.product.service.impl;
 
+import com.example.ecommerce.backend.common.dto.response.PaginatedResponse;
 import com.example.ecommerce.backend.common.exception.ResourceConflictException;
+import com.example.ecommerce.backend.product.dto.request.CategorySearchRequest;
 import com.example.ecommerce.backend.product.dto.request.ProductCreateRequest;
+import com.example.ecommerce.backend.product.dto.request.ProductSearchRequest;
 import com.example.ecommerce.backend.product.dto.request.ProductUpdateRequest;
 import com.example.ecommerce.backend.product.dto.response.ProductResponse;
 import com.example.ecommerce.backend.product.entity.Category;
@@ -13,8 +16,12 @@ import com.example.ecommerce.backend.product.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Implementation of {@link ProductService} for managing product catalog items.
@@ -89,4 +96,19 @@ public class ProductServiceImpl implements ProductService {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found: " + categoryId));
     }
+
+    @Override
+    public Page<Product> searchProducts(ProductSearchRequest request) {
+        Pageable pageable = PageRequest.of(request.page(), request.size());
+        return productRepository.searchActiveProducts(
+                request.name(),
+                request.sku(),
+                request.categoryId(),
+                request.minPrice(),
+                request.maxPrice(),
+                pageable
+        );
+
+    }
+
 }

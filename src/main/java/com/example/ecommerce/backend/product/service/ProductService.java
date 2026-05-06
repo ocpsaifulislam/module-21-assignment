@@ -1,8 +1,12 @@
 package com.example.ecommerce.backend.product.service;
 
+import com.example.ecommerce.backend.common.dto.response.PaginatedResponse;
+import com.example.ecommerce.backend.product.dto.request.CategorySearchRequest;
 import com.example.ecommerce.backend.product.dto.request.ProductCreateRequest;
+import com.example.ecommerce.backend.product.dto.request.ProductSearchRequest;
 import com.example.ecommerce.backend.product.dto.request.ProductUpdateRequest;
 import com.example.ecommerce.backend.product.dto.response.ProductResponse;
+import com.example.ecommerce.backend.product.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -21,7 +25,7 @@ public interface ProductService {
      * @param request product creation details
      * @return the newly created product response
      * @throws com.example.ecommerce.backend.common.exception.ResourceConflictException if SKU already exists
-     * @throws jakarta.persistence.EntityNotFoundException if category not found
+     * @throws jakarta.persistence.EntityNotFoundException                              if category not found
      */
     ProductResponse create(ProductCreateRequest request);
 
@@ -45,7 +49,7 @@ public interface ProductService {
     /**
      * Updates editable details for an existing product.
      *
-     * @param id product identifier
+     * @param id      product identifier
      * @param request product update details
      * @return updated product response
      * @throws jakarta.persistence.EntityNotFoundException if product or category not found
@@ -59,4 +63,13 @@ public interface ProductService {
      * @throws jakarta.persistence.EntityNotFoundException if product not found
      */
     void delete(Long id);
+
+    /**
+     * Searches for products based on various criteria.
+     *
+     * @param request search parameters including name, SKU, category, and price range
+     * @return a page of matching product responses
+     */
+    Page<Product> searchProducts(ProductSearchRequest request);
+
 }
