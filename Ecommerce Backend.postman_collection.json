@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "e34907cf-2ce3-4474-b845-a2d153980177",
+    "_postman_id": "0c654250-60be-4f68-8150-07991093707c",
     "name": "Ecommerce Backend",
     "description": "Professional Postman collection for testing and demoing the ecommerce backend endpoints. Requests are grouped by feature package and can be run in order for category, product, and inventory flows.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "3537602"
+    "_exporter_id": "23041474"
   },
   "item": [
     {
@@ -67,6 +67,67 @@
                     "api",
                     "v1",
                     "categories"
+                  ]
+                },
+                "description": "Creates a new product category using a unique professional business code."
+              },
+              "response": []
+            },
+            {
+              "name": "Category Search",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "const uniqueSuffix = Date.now();",
+                      "pm.collectionVariables.set('CATEGORY_NAME', 'Premium Home Appliances');",
+                      "pm.collectionVariables.set('CATEGORY_CODE', `HOME-APPLIANCES-${uniqueSuffix}`);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "pm.collectionVariables.set('CATEGORY_ID', response.data.id);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"\",\n    \"code\": \"\",\n    \"page\": 0,\n    \"size\": 10\n}"
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/api/v1/categories/search",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "categories",
+                    "search"
                   ]
                 },
                 "description": "Creates a new product category using a unique professional business code."
@@ -634,6 +695,10 @@
                     "value": "application/json"
                   }
                 ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sku\": \"{{PRODUCT_SKU}}\",\n  \"name\": \"{{PRODUCT_NAME}}\",\n  \"description\": \"Ergonomic stainless steel smart kettle for premium kitchen setups.\",\n  \"price\": 129.99,\n  \"isActive\": true,\n  \"categoryId\": {{CATEGORY_ID}},\n  \"imageUrl\": \"https://example.com/products/{{PRODUCT_SKU}}.jpg\"\n}"
+                },
                 "url": {
                   "raw": "{{BASE_URL}}/api/v1/products",
                   "host": [
@@ -645,17 +710,76 @@
                     "products"
                   ]
                 },
-                "description": "Creates a product using the category created earlier in the demo flow.",
+                "description": "Creates a product using the category created earlier in the demo flow."
+              },
+              "response": []
+            },
+            {
+              "name": "Product Search",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "if (!pm.collectionVariables.get('CATEGORY_ID')) {",
+                      "    throw new Error('Run Category / Happy Path / Create Category before creating a product.');",
+                      "}",
+                      "const uniqueSuffix = Date.now();",
+                      "pm.collectionVariables.set('PRODUCT_SKU', `KETTLE-${uniqueSuffix}`);",
+                      "pm.collectionVariables.set('PRODUCT_NAME', 'Smart Stainless Steel Kettle');"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const response = pm.response.json();",
+                      "pm.collectionVariables.set('PRODUCT_ID', response.data.id);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"sku\": \"{{PRODUCT_SKU}}\",\n  \"name\": \"{{PRODUCT_NAME}}\",\n  \"description\": \"Ergonomic stainless steel smart kettle for premium kitchen setups.\",\n  \"price\": 129.99,\n  \"isActive\": true,\n  \"categoryId\": {{CATEGORY_ID}},\n  \"imageUrl\": \"https://example.com/products/{{PRODUCT_SKU}}.jpg\"\n}"
-                }
+                  "raw": "{\n  \"name\": \"Smart Stainless Steel Kettle\",\n  \"sku\": \"\",\n  \"categoryId\":1,\n  \"minPrice\": null,\n  \"maxPrice\": null,\n  \"page\": 0,\n  \"size\": 10\n}"
+                },
+                "url": {
+                  "raw": "{{BASE_URL}}/api/v1/products/search",
+                  "host": [
+                    "{{BASE_URL}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "products",
+                    "search"
+                  ]
+                },
+                "description": "Creates a product using the category created earlier in the demo flow."
               },
               "response": []
             },
             {
               "name": "List Products",
-              "event": [],
               "request": {
                 "method": "GET",
                 "header": [
@@ -718,6 +842,10 @@
                     "value": "application/json"
                   }
                 ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sku\": \"{{PRODUCT_SKU}}\",\n  \"name\": \"Duplicate Smart Kettle\",\n  \"description\": \"Attempts to reuse the existing SKU.\",\n  \"price\": 119.99,\n  \"isActive\": true,\n  \"categoryId\": {{CATEGORY_ID}},\n  \"imageUrl\": \"https://example.com/products/duplicate-kettle.jpg\"\n}"
+                },
                 "url": {
                   "raw": "{{BASE_URL}}/api/v1/products",
                   "host": [
@@ -729,17 +857,12 @@
                     "products"
                   ]
                 },
-                "description": "Validates unique SKU handling while the created product still exists.",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"sku\": \"{{PRODUCT_SKU}}\",\n  \"name\": \"Duplicate Smart Kettle\",\n  \"description\": \"Attempts to reuse the existing SKU.\",\n  \"price\": 119.99,\n  \"isActive\": true,\n  \"categoryId\": {{CATEGORY_ID}},\n  \"imageUrl\": \"https://example.com/products/duplicate-kettle.jpg\"\n}"
-                }
+                "description": "Validates unique SKU handling while the created product still exists."
               },
               "response": []
             },
             {
               "name": "Get Product By ID",
-              "event": [],
               "request": {
                 "method": "GET",
                 "header": [
@@ -791,6 +914,10 @@
                     "value": "application/json"
                   }
                 ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"{{UPDATED_PRODUCT_NAME}}\",\n  \"description\": \"Updated premium kettle with app-controlled temperature presets.\",\n  \"price\": 149.99,\n  \"isActive\": true,\n  \"categoryId\": {{CATEGORY_ID}},\n  \"imageUrl\": \"https://example.com/products/{{PRODUCT_SKU}}-pro.jpg\"\n}"
+                },
                 "url": {
                   "raw": "{{BASE_URL}}/api/v1/products/{{PRODUCT_ID}}",
                   "host": [
@@ -803,11 +930,7 @@
                     "{{PRODUCT_ID}}"
                   ]
                 },
-                "description": "Updates editable product details while keeping the SKU immutable.",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"{{UPDATED_PRODUCT_NAME}}\",\n  \"description\": \"Updated premium kettle with app-controlled temperature presets.\",\n  \"price\": 149.99,\n  \"isActive\": true,\n  \"categoryId\": {{CATEGORY_ID}},\n  \"imageUrl\": \"https://example.com/products/{{PRODUCT_SKU}}-pro.jpg\"\n}"
-                }
+                "description": "Updates editable product details while keeping the SKU immutable."
               },
               "response": []
             },
@@ -852,7 +975,6 @@
           "item": [
             {
               "name": "Create Product - Missing SKU",
-              "event": [],
               "request": {
                 "method": "POST",
                 "header": [
@@ -865,6 +987,10 @@
                     "value": "application/json"
                   }
                 ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Smart Rice Cooker\",\n  \"description\": \"Missing required SKU.\",\n  \"price\": 89.99,\n  \"isActive\": true,\n  \"categoryId\": {{CATEGORY_ID}},\n  \"imageUrl\": \"https://example.com/products/rice-cooker.jpg\"\n}"
+                },
                 "url": {
                   "raw": "{{BASE_URL}}/api/v1/products",
                   "host": [
@@ -876,17 +1002,12 @@
                     "products"
                   ]
                 },
-                "description": "Validates that product SKU is required.",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"Smart Rice Cooker\",\n  \"description\": \"Missing required SKU.\",\n  \"price\": 89.99,\n  \"isActive\": true,\n  \"categoryId\": {{CATEGORY_ID}},\n  \"imageUrl\": \"https://example.com/products/rice-cooker.jpg\"\n}"
-                }
+                "description": "Validates that product SKU is required."
               },
               "response": []
             },
             {
               "name": "Create Product - Invalid Category",
-              "event": [],
               "request": {
                 "method": "POST",
                 "header": [
@@ -899,6 +1020,10 @@
                     "value": "application/json"
                   }
                 ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sku\": \"INVALID-CATEGORY-{{PRODUCT_SKU}}\",\n  \"name\": \"Invalid Category Product\",\n  \"description\": \"References a category id that should not exist.\",\n  \"price\": 59.99,\n  \"isActive\": true,\n  \"categoryId\": {{NON_EXISTING_CATEGORY_ID}},\n  \"imageUrl\": \"https://example.com/products/invalid-category.jpg\"\n}"
+                },
                 "url": {
                   "raw": "{{BASE_URL}}/api/v1/products",
                   "host": [
@@ -910,17 +1035,12 @@
                     "products"
                   ]
                 },
-                "description": "Verifies not-found behavior when creating a product for an unknown category.",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"sku\": \"INVALID-CATEGORY-{{PRODUCT_SKU}}\",\n  \"name\": \"Invalid Category Product\",\n  \"description\": \"References a category id that should not exist.\",\n  \"price\": 59.99,\n  \"isActive\": true,\n  \"categoryId\": {{NON_EXISTING_CATEGORY_ID}},\n  \"imageUrl\": \"https://example.com/products/invalid-category.jpg\"\n}"
-                }
+                "description": "Verifies not-found behavior when creating a product for an unknown category."
               },
               "response": []
             },
             {
               "name": "Get Product - Not Found",
-              "event": [],
               "request": {
                 "method": "GET",
                 "header": [
@@ -947,7 +1067,6 @@
             },
             {
               "name": "Update Product - Blank Name",
-              "event": [],
               "request": {
                 "method": "PUT",
                 "header": [
@@ -960,6 +1079,10 @@
                     "value": "application/json"
                   }
                 ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"\",\n  \"description\": \"Blank product name should fail validation.\",\n  \"price\": 49.99,\n  \"isActive\": true,\n  \"categoryId\": {{CATEGORY_ID}},\n  \"imageUrl\": \"https://example.com/products/blank-name.jpg\"\n}"
+                },
                 "url": {
                   "raw": "{{BASE_URL}}/api/v1/products/{{NON_EXISTING_PRODUCT_ID}}",
                   "host": [
@@ -972,17 +1095,12 @@
                     "{{NON_EXISTING_PRODUCT_ID}}"
                   ]
                 },
-                "description": "Validates that product name is required for updates.",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"\",\n  \"description\": \"Blank product name should fail validation.\",\n  \"price\": 49.99,\n  \"isActive\": true,\n  \"categoryId\": {{CATEGORY_ID}},\n  \"imageUrl\": \"https://example.com/products/blank-name.jpg\"\n}"
-                }
+                "description": "Validates that product name is required for updates."
               },
               "response": []
             },
             {
               "name": "Update Product - Negative Price",
-              "event": [],
               "request": {
                 "method": "PUT",
                 "header": [
@@ -995,6 +1113,10 @@
                     "value": "application/json"
                   }
                 ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Invalid Price Product\",\n  \"description\": \"Negative price should fail validation.\",\n  \"price\": -10.00,\n  \"isActive\": true,\n  \"categoryId\": {{CATEGORY_ID}},\n  \"imageUrl\": \"https://example.com/products/invalid-price.jpg\"\n}"
+                },
                 "url": {
                   "raw": "{{BASE_URL}}/api/v1/products/{{NON_EXISTING_PRODUCT_ID}}",
                   "host": [
@@ -1007,11 +1129,7 @@
                     "{{NON_EXISTING_PRODUCT_ID}}"
                   ]
                 },
-                "description": "Validates that product price must be greater than zero.",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"Invalid Price Product\",\n  \"description\": \"Negative price should fail validation.\",\n  \"price\": -10.00,\n  \"isActive\": true,\n  \"categoryId\": {{CATEGORY_ID}},\n  \"imageUrl\": \"https://example.com/products/invalid-price.jpg\"\n}"
-                }
+                "description": "Validates that product price must be greater than zero."
               },
               "response": []
             }
@@ -1067,6 +1185,10 @@
                     "value": "application/json"
                   }
                 ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"productId\": {{PRODUCT_ID}},\n  \"totalQuantity\": 100\n}"
+                },
                 "url": {
                   "raw": "{{BASE_URL}}/api/v1/inventory",
                   "host": [
@@ -1078,17 +1200,12 @@
                     "inventory"
                   ]
                 },
-                "description": "Creates inventory for the product created earlier in the demo flow.",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"productId\": {{PRODUCT_ID}},\n  \"totalQuantity\": 100\n}"
-                }
+                "description": "Creates inventory for the product created earlier in the demo flow."
               },
               "response": []
             },
             {
               "name": "Get Inventory By Product ID",
-              "event": [],
               "request": {
                 "method": "GET",
                 "header": [
@@ -1115,7 +1232,6 @@
             },
             {
               "name": "Create Inventory - Duplicate Product",
-              "event": [],
               "request": {
                 "method": "POST",
                 "header": [
@@ -1128,6 +1244,10 @@
                     "value": "application/json"
                   }
                 ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"productId\": {{PRODUCT_ID}},\n  \"totalQuantity\": 25\n}"
+                },
                 "url": {
                   "raw": "{{BASE_URL}}/api/v1/inventory",
                   "host": [
@@ -1139,17 +1259,12 @@
                     "inventory"
                   ]
                 },
-                "description": "Validates that each product can have only one inventory record.",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"productId\": {{PRODUCT_ID}},\n  \"totalQuantity\": 25\n}"
-                }
+                "description": "Validates that each product can have only one inventory record."
               },
               "response": []
             },
             {
               "name": "Increase Inventory",
-              "event": [],
               "request": {
                 "method": "POST",
                 "header": [
@@ -1162,6 +1277,10 @@
                     "value": "application/json"
                   }
                 ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"quantity\": 10\n}"
+                },
                 "url": {
                   "raw": "{{BASE_URL}}/api/v1/inventory/{{PRODUCT_ID}}/increase",
                   "host": [
@@ -1175,17 +1294,12 @@
                     "increase"
                   ]
                 },
-                "description": "Adds quantity to total inventory.",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"quantity\": 10\n}"
-                }
+                "description": "Adds quantity to total inventory."
               },
               "response": []
             },
             {
               "name": "Reserve Inventory",
-              "event": [],
               "request": {
                 "method": "POST",
                 "header": [
@@ -1198,6 +1312,10 @@
                     "value": "application/json"
                   }
                 ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"quantity\": 2\n}"
+                },
                 "url": {
                   "raw": "{{BASE_URL}}/api/v1/inventory/{{PRODUCT_ID}}/reserve",
                   "host": [
@@ -1211,17 +1329,12 @@
                     "reserve"
                   ]
                 },
-                "description": "Moves available quantity into reserved inventory.",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"quantity\": 2\n}"
-                }
+                "description": "Moves available quantity into reserved inventory."
               },
               "response": []
             },
             {
               "name": "Release Inventory",
-              "event": [],
               "request": {
                 "method": "POST",
                 "header": [
@@ -1234,6 +1347,10 @@
                     "value": "application/json"
                   }
                 ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"quantity\": 1\n}"
+                },
                 "url": {
                   "raw": "{{BASE_URL}}/api/v1/inventory/{{PRODUCT_ID}}/release",
                   "host": [
@@ -1247,17 +1364,12 @@
                     "release"
                   ]
                 },
-                "description": "Moves reserved quantity back into available inventory.",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"quantity\": 1\n}"
-                }
+                "description": "Moves reserved quantity back into available inventory."
               },
               "response": []
             },
             {
               "name": "Decrease Inventory",
-              "event": [],
               "request": {
                 "method": "POST",
                 "header": [
@@ -1270,6 +1382,10 @@
                     "value": "application/json"
                   }
                 ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"quantity\": 5\n}"
+                },
                 "url": {
                   "raw": "{{BASE_URL}}/api/v1/inventory/{{PRODUCT_ID}}/decrease",
                   "host": [
@@ -1283,11 +1399,7 @@
                     "decrease"
                   ]
                 },
-                "description": "Subtracts quantity from total inventory without violating reserved stock.",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"quantity\": 5\n}"
-                }
+                "description": "Subtracts quantity from total inventory without violating reserved stock."
               },
               "response": []
             }
@@ -1298,7 +1410,6 @@
           "item": [
             {
               "name": "Create Inventory - Missing Product ID",
-              "event": [],
               "request": {
                 "method": "POST",
                 "header": [
@@ -1311,6 +1422,10 @@
                     "value": "application/json"
                   }
                 ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"totalQuantity\": 100\n}"
+                },
                 "url": {
                   "raw": "{{BASE_URL}}/api/v1/inventory",
                   "host": [
@@ -1322,17 +1437,12 @@
                     "inventory"
                   ]
                 },
-                "description": "Validates that productId is required.",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"totalQuantity\": 100\n}"
-                }
+                "description": "Validates that productId is required."
               },
               "response": []
             },
             {
               "name": "Create Inventory - Negative Quantity",
-              "event": [],
               "request": {
                 "method": "POST",
                 "header": [
@@ -1345,6 +1455,10 @@
                     "value": "application/json"
                   }
                 ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"productId\": {{PRODUCT_ID}},\n  \"totalQuantity\": -1\n}"
+                },
                 "url": {
                   "raw": "{{BASE_URL}}/api/v1/inventory",
                   "host": [
@@ -1356,17 +1470,12 @@
                     "inventory"
                   ]
                 },
-                "description": "Validates that total inventory quantity cannot be negative.",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"productId\": {{PRODUCT_ID}},\n  \"totalQuantity\": -1\n}"
-                }
+                "description": "Validates that total inventory quantity cannot be negative."
               },
               "response": []
             },
             {
               "name": "Get Inventory - Not Found",
-              "event": [],
               "request": {
                 "method": "GET",
                 "header": [
@@ -1393,7 +1502,6 @@
             },
             {
               "name": "Increase Inventory - Zero Quantity",
-              "event": [],
               "request": {
                 "method": "POST",
                 "header": [
@@ -1406,6 +1514,10 @@
                     "value": "application/json"
                   }
                 ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"quantity\": 0\n}"
+                },
                 "url": {
                   "raw": "{{BASE_URL}}/api/v1/inventory/{{PRODUCT_ID}}/increase",
                   "host": [
@@ -1419,17 +1531,12 @@
                     "increase"
                   ]
                 },
-                "description": "Validates that adjustment quantity must be greater than zero.",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"quantity\": 0\n}"
-                }
+                "description": "Validates that adjustment quantity must be greater than zero."
               },
               "response": []
             },
             {
               "name": "Reserve Inventory - Too Much Quantity",
-              "event": [],
               "request": {
                 "method": "POST",
                 "header": [
@@ -1442,6 +1549,10 @@
                     "value": "application/json"
                   }
                 ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"quantity\": 999999\n}"
+                },
                 "url": {
                   "raw": "{{BASE_URL}}/api/v1/inventory/{{PRODUCT_ID}}/reserve",
                   "host": [
@@ -1455,17 +1566,12 @@
                     "reserve"
                   ]
                 },
-                "description": "Validates insufficient available stock handling.",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"quantity\": 999999\n}"
-                }
+                "description": "Validates insufficient available stock handling."
               },
               "response": []
             },
             {
               "name": "Release Inventory - Too Much Quantity",
-              "event": [],
               "request": {
                 "method": "POST",
                 "header": [
@@ -1478,6 +1584,10 @@
                     "value": "application/json"
                   }
                 ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"quantity\": 999999\n}"
+                },
                 "url": {
                   "raw": "{{BASE_URL}}/api/v1/inventory/{{PRODUCT_ID}}/release",
                   "host": [
@@ -1491,11 +1601,7 @@
                     "release"
                   ]
                 },
-                "description": "Validates release handling when requested quantity exceeds reserved stock.",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"quantity\": 999999\n}"
-                }
+                "description": "Validates release handling when requested quantity exceeds reserved stock."
               },
               "response": []
             }
@@ -1522,10 +1628,6 @@
       "value": "http://localhost:8080"
     },
     {
-      "key": "CATEGORY_ID",
-      "value": ""
-    },
-    {
       "key": "CATEGORY_NAME",
       "value": "Premium Home Appliances"
     },
@@ -1540,10 +1642,6 @@
     {
       "key": "NON_EXISTING_CATEGORY_ID",
       "value": "999999999"
-    },
-    {
-      "key": "PRODUCT_ID",
-      "value": ""
     },
     {
       "key": "PRODUCT_SKU",
@@ -1567,6 +1665,14 @@
     },
     {
       "key": "INVENTORY_PRODUCT_ID",
+      "value": ""
+    },
+    {
+      "key": "CATEGORY_ID",
+      "value": ""
+    },
+    {
+      "key": "PRODUCT_ID",
       "value": ""
     }
   ]
