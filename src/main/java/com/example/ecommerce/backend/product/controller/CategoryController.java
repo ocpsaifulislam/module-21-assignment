@@ -334,5 +334,6 @@ public class CategoryController {
          categoryService.delete(id); // soft delete
 
         return ResponseEntity.ok(ApiResponse.success("Category id ("+id+") deleted successfully"));
+
     }
 }
