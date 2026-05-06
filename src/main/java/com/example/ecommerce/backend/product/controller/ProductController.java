@@ -47,7 +47,7 @@ public class ProductController {
      * @param request validated product creation payload
      * @return response containing the created product
      * @throws com.example.ecommerce.backend.common.exception.ResourceConflictException when the SKU already exists
-     * @throws jakarta.persistence.EntityNotFoundException when the category does not exist
+     * @throws jakarta.persistence.EntityNotFoundException                              when the category does not exist
      */
     @Operation(
             summary = "Create a new product",
@@ -215,7 +215,7 @@ public class ProductController {
     /**
      * Updates existing product details.
      *
-     * @param id product identifier
+     * @param id      product identifier
      * @param request validated product update payload
      * @return response containing the updated product
      * @throws jakarta.persistence.EntityNotFoundException when no product or category exists for the identifier
@@ -302,6 +302,8 @@ public class ProductController {
         // TODO: Replace the current hard delete behavior with soft delete.
         // Soft delete means the product row must remain in the database.
         // Instead of calling deleteById, load the product, set isActive = false, and save it.
-        throw new UnsupportedOperationException("Product soft delete assignment is not implemented yet.");
+//        throw new UnsupportedOperationException("Product soft delete assignment is not implemented yet.");
+        productService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
