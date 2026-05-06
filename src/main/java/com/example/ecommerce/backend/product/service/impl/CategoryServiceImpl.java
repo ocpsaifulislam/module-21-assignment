@@ -84,14 +84,4 @@ public class CategoryServiceImpl implements CategoryService {
                 pageable
         );
     }
-
-    @Override
-    public Page<Category> searchCategories(CategorySearchRequest request) {
-        Pageable pageable = PageRequest.of(request.page(), request.size());
-        return categoryRepository.searchCategories(
-                request.name(),
-                request.code(),
-                pageable
-        );
-    }
 }
