@@ -199,7 +199,11 @@ public class CategoryController {
         // Use request.page() and request.size() to build the Pageable object.
 
         // Remove this line with your service method call
-        throw new UnsupportedOperationException("Category search assignment is not implemented yet.");
+        //  throw new UnsupportedOperationException("Category search assignment is not implemented yet.");
+
+        return ResponseEntity.ok(ApiResponse.success(
+                PaginatedResponse.of(categoryService.searchCategories(request))
+        ));
     }
 
     /**
@@ -318,7 +322,7 @@ public class CategoryController {
             }
     )
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(
+    public ResponseEntity<ApiResponse<Void>> deleteCategory(
             @Parameter(description = "Unique identifier of the category to delete.", example = "1", required = true)
             @PathVariable Long id) {
         // TODO: Replace the current hard delete behavior with soft delete.
@@ -326,6 +330,9 @@ public class CategoryController {
         // Instead of calling deleteById, load the category, set isActive = false, and save it.
 
         // Remove this line with your service method call
-        throw new UnsupportedOperationException("Category soft delete assignment is not implemented yet.");
+        // throw new UnsupportedOperationException("Category soft delete assignment is not implemented yet.");
+         categoryService.delete(id); // soft delete
+
+        return ResponseEntity.ok(ApiResponse.success("Category id ("+id+") deleted successfully"));
     }
 }
